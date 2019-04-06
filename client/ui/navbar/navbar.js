@@ -9,6 +9,7 @@ Template.navbar.events({
     }
 });
 
+// éffacer la modale du formulaire (petit carée blanc) avec la fonction autorun
 Template.login_modal.onCreated(function () {
     this.autorun(() => {
         if (Meteor.userId()) {

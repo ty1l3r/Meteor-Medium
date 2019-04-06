@@ -6,6 +6,9 @@
 
             {{#unless loggingIn}}
             {{#if currentUser}}
+            <span class="navbar-text mr-2">
+                {{currentUser.profile.pseudo}}
+            </span>
             <button class="btn btn-outline-secondary mr-2 js-logout">Déconnexion</button>
             {{else}}
             <button class="btn btn-succes js-open-login-modal">Connexion</button>
