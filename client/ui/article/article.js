@@ -73,7 +73,7 @@ Template.article_edit_form.events({
         Articles.update({ _id: FlowRouter.getParam('articleId')}, { $set: { title: title, content: content }});
       */
         
-        Meteor.call('updateArticle', FlowRouter.getParam('articleId'), { title: title, content: content }, 
+        Meteor.call('updateArticle', { id: FlowRouter.getParam('articleId'), title: title, content: content }, 
             function(err, res) {
                 if(!err) {
                     FlowRouter.go('/article/:articleId', { articleId: FlowRouter.getParam('articleId') });

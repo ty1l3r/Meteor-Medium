@@ -1,4 +1,4 @@
-import { Articles, Comments } from './collections';
+import { Articles, Comments, articleUpsertSchema} from './collections';
 import { check } from 'meteor/check';
 
 //si grande application plusieurs dossier sont possible
@@ -9,10 +9,8 @@ Meteor.methods({
 
     insertArticle(article) {
 
-        check(article, {
-            title: String,
-            content: String,
-        });
+        //code SimpleSchema
+        articleUpsertSchema.validate(article);
 
         let articleDoc = {
             title: article.title,
@@ -28,15 +26,15 @@ Meteor.methods({
 
     //======== UPDATE ==============================
     
-    updateArticle(articleId, article) {
+    updateArticle(article) {
         
-        check(articleId, String);
         check(article, {
+            id:String,
             title: String,
             content: String
         });
 
-            Articles.update({ _id: articleId },
+            Articles.update({ _id: article.id},
                 {
                     $set: {
                         title: article.title,
