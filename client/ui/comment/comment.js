@@ -8,15 +8,20 @@ Template.comment_form.events({
 
         const content = event.target.content.value;
 
+     /* ====== =====Transferé dans Methods pour sécurité
+
         let commentDoc = {
             content: content, 
             articleId: FlowRouter.getParam('articleId'),
             createdAt: new Date(),
             ownerId: Meteor.userId()
         }
-
         Comments.insert(commentDoc);
 
+    */
+        //insertion de la Method
+        Meteor.call('insertComment', { content: content, articleId: FlowRouter.getParam('articleId') });
+        
         event.target.content.value = ''; // vide le champ
     }
 });

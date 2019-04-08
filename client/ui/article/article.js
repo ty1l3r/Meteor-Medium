@@ -10,6 +10,8 @@ Template.article_create_form.events({
         const title = event.target.title.value;
         const content = event.target.content.value;
 
+ /*   Code qui a été transférer dans les méthods (securité)
+ 
         let articleDoc = {
             title: title,
             content: content,
@@ -18,6 +20,10 @@ Template.article_create_form.events({
         };
 
         Articles.insert(articleDoc);
+*/
+        // appel des Methods
+
+        Meteor.call('insertArticle', { title: title, content: content });
 
         event.target.title.value = '';
         event.target.content.value = '';
@@ -25,7 +31,7 @@ Template.article_create_form.events({
 });
 
  // retourn la variable Artciles dans article.html
- // dans fin({},{}) en deuxième paramètre classerl es articles par date
+ // dans fin({},{}) en deuxième paramètre classer les articles par date
 Template.article_list.helpers({
     articles() {
         return Articles.find({}, {sort: {createdAt: -1}}).fetch();
@@ -46,7 +52,7 @@ Template.article_edit_form.helpers({
     }
 })
 
-//Modification d'un article  Fonction update 
+//========= Modification d'un article  Fonction update ======= //
 
 Template.article_edit_form.events({
     'submit .js-edit-article'(event, instance) {
@@ -55,14 +61,23 @@ Template.article_edit_form.events({
         const title = event.target.title.value;
         const content = event.target.content.value;
 
+      /*  déplacé dans les methods (sécurité)
         Articles.update({ _id: FlowRouter.getParam('articleId')}, { $set: { title: title, content: content }});
+      */
+        
+        Meteor.call('updateArticle', FlowRouter.getParam('articleId'), { title: title, content: content });
         
         FlowRouter.go('/article/:articleId', { articleId: FlowRouter.getParam('articleId') });
     },
 
-    // Supprime 
+    // Supprime l'entrée du placeholder
     'click .js-delete-article'(event, instance) {
+
+        /*  Transferé dans les Méthods pour sécurité. 
         Articles.remove( { _id: FlowRouter.getParam('articleId') });
+        */
+        
+        Meteor.call('removeArticle', FlowRouter.getParam('articleId'));
 
         FlowRouter.go('/');
     }
