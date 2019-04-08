@@ -25,9 +25,10 @@ Template.article_create_form.events({
 });
 
  // retourn la variable Artciles dans article.html
+ // dans fin({},{}) en deuxième paramètre classerl es articles par date
 Template.article_list.helpers({
     articles() {
-        return Articles.find().fetch();
+        return Articles.find({}, {sort: {createdAt: -1}}).fetch();
     }
 });
 
