@@ -1,5 +1,6 @@
 import { Articles, Comments } from '../both'; //import des collections
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './ui/globalHelpers';
 import './startup/router';
 import './ui/layout/layout';
 import { Meteor } from 'meteor/meteor';

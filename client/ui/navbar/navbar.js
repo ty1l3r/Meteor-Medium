@@ -1,4 +1,5 @@
 import './navbar.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.navbar.events({
     'click .js-open-login-modal'(event, instance) {
@@ -6,7 +7,11 @@ Template.navbar.events({
     },
     'click .js-logout'(event, instance) {
         Meteor.logout();
+    },
+    'click .js-goto-create-article'(event, instance) {
+        FlowRouter.go('/article/create');
     }
+
 });
 
 // éffacer la modale du formulaire (petit carée blanc) avec la fonction autorun
