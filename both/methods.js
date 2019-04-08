@@ -1,10 +1,19 @@
 import { Articles, Comments } from './collections';
+import { check } from 'meteor/check';
 
 //si grande application plusieurs dossier sont possible
 
 Meteor.methods({
 
+    //======= CREATION ============================
+
     insertArticle(article) {
+
+        check(article, {
+            title: String,
+            content: String,
+        });
+
         let articleDoc = {
             title: article.title,
             content: article.content,
@@ -12,11 +21,21 @@ Meteor.methods({
             ownerId: this.userId
         };
 
-        Articles.insert(articleDoc);
+        return Articles.insert(articleDoc);
+        //le return renvoi aussi l'id de l'article
         
     },
 
-        updateArticle(articleId, article) {
+    //======== UPDATE ==============================
+    
+    updateArticle(articleId, article) {
+        
+        check(articleId, String);
+        check(article, {
+            title: String,
+            content: String
+        });
+
             Articles.update({ _id: articleId },
                 {
                     $set: {
@@ -26,11 +45,22 @@ Meteor.methods({
                 });
         },
 
+    //========== DELETE =============================
+        
             removeArticle(articleId) {
+                check(articleId, String);
+
                 Articles.remove( { _id: articleId});
             },
 
+    //========= CREATE COMMENTAIRES ================
+            
     insertComment(comment) {
+
+        check(comment, {
+            articleId: String,
+            content: String
+        });
 
         let commentDoc = {
             content: comment.content, 

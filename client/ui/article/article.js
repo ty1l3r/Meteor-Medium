@@ -3,6 +3,8 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import './article.html';
 
+// ================ CREATE EVENTS =====================
+
 Template.article_create_form.events({
     'submit .js-create-article'(event, instance) {
         event.preventDefault();
@@ -11,26 +13,34 @@ Template.article_create_form.events({
         const content = event.target.content.value;
 
  /*   Code qui a été transférer dans les méthods (securité)
- 
         let articleDoc = {
             title: title,
             content: content,
             createdAt: new Date(),
             ownerId: Meteor.userId()
         };
-
         Articles.insert(articleDoc);
 */
+        
         // appel des Methods
+        Meteor.call('insertArticle', { title: title, content: content }, function(err, articleId) {
+                if (!err) {
+                    event.target.title.value = '';
+                    event.target.content.value = '';
 
-        Meteor.call('insertArticle', { title: title, content: content });
+                    //redirection sur la page de création de l'article, il faut rester sur le callback
+                    FlowRouter.go('/article/:articleId', { articleId: articleId });
+                 }
+            
+        });
 
-        event.target.title.value = '';
-        event.target.content.value = '';
     }
 });
 
- // retourn la variable Artciles dans article.html
+/* ================ HELPERS =====================
+===============================================*/
+
+ // retourne la variable Artciles dans article.html
  // dans fin({},{}) en deuxième paramètre classer les articles par date
 Template.article_list.helpers({
     articles() {
@@ -38,7 +48,7 @@ Template.article_list.helpers({
     }
 });
 
-//retourn Article dans l'affichage des articles
+//retourne Article dans l'affichage des articles
 Template.article_page.helpers({
     article() {
         return Articles.findOne({ _id: FlowRouter.getParam('articleId') });
@@ -52,8 +62,6 @@ Template.article_edit_form.helpers({
     }
 })
 
-//========= Modification d'un article  Fonction update ======= //
-
 Template.article_edit_form.events({
     'submit .js-edit-article'(event, instance) {
         event.preventDefault();
@@ -65,9 +73,15 @@ Template.article_edit_form.events({
         Articles.update({ _id: FlowRouter.getParam('articleId')}, { $set: { title: title, content: content }});
       */
         
-        Meteor.call('updateArticle', FlowRouter.getParam('articleId'), { title: title, content: content });
+        Meteor.call('updateArticle', FlowRouter.getParam('articleId'), { title: title, content: content }, 
+            function(err, res) {
+                if(!err) {
+                    FlowRouter.go('/article/:articleId', { articleId: FlowRouter.getParam('articleId') });
+                }
+            }
+
+        );
         
-        FlowRouter.go('/article/:articleId', { articleId: FlowRouter.getParam('articleId') });
     },
 
     // Supprime l'entrée du placeholder
@@ -77,8 +91,9 @@ Template.article_edit_form.events({
         Articles.remove( { _id: FlowRouter.getParam('articleId') });
         */
         
-        Meteor.call('removeArticle', FlowRouter.getParam('articleId'));
+        Meteor.call('removeArticle', FlowRouter.getParam('articleId'), function (err, res) {
+            if(!err) FlowRouter.go('/');
+        });
 
-        FlowRouter.go('/');
     }
 });
