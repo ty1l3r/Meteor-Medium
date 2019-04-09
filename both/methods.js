@@ -1,4 +1,4 @@
-import { Articles, Comments, articleUpsertSchema} from './collections';
+import { Articles, Comments, articleUpsertSchema, commentInsertSchema} from './collections';
 import { check } from 'meteor/check';
 
 //si grande application plusieurs dossier sont possible
@@ -11,6 +11,11 @@ Meteor.methods({
 
         //code SimpleSchema
         articleUpsertSchema.validate(article);
+
+        // emepcher l'édition d'article si le client n'est pas inscrit.
+        if (!this.userId) {
+            throw new Meteor.Error('not-connected', 'user not connected');
+        }
 
         let articleDoc = {
             title: article.title,
@@ -27,12 +32,20 @@ Meteor.methods({
     //======== UPDATE ==============================
     
     updateArticle(article) {
+        articleUpsertSchema.validate(article);
+
+        // emepcher l'édition d'article si le client n'est pas inscrit.
+        if (!this.userId) {
+        throw new Meteor.Error('not-connected', 'user not connected');
+        }
         
-        check(article, {
-            id:String,
-            title: String,
-            content: String
-        });
+        //chercher l'article avec l'Id
+        let articleFound = Articles.findOne({ _id: article });
+        // pas de bras, pas de chocolat.
+        if (articleFound.ownerId !== this.userId) {
+            throw new Meteor.Error('unauthorized',
+                'L\'utilisateur doit être l\'auteur de l\'article');
+        }
 
             Articles.update({ _id: article.id},
                 {
@@ -48,17 +61,31 @@ Meteor.methods({
             removeArticle(articleId) {
                 check(articleId, String);
 
+        // emepcher l'édition d'article si le client n'est pas inscrit.
+        if (!this.userId) {
+            throw new Meteor.Error('not-connected', 'user not connected');
+        }
+                
+              //chercher l'article avec l'Id
+              let articleFound = Articles.findOne({ _id: articleId });
+              // pas de bras, pas de chocolat.
+              if (articleFound.ownerId !== this.userId) {
+                  throw new Meteor.Error('unauthorized',
+                      'L\'utilisateur doit être l\'auteur de l\'article');
+              }
+
                 Articles.remove( { _id: articleId});
             },
 
     //========= CREATE COMMENTAIRES ================
             
     insertComment(comment) {
+        commentInsertSchema.validate(comment);
 
-        check(comment, {
-            articleId: String,
-            content: String
-        });
+        // emepcher l'édition d'article si le client n'est pas inscrit.
+        if (!this.userId) {
+        throw new Meteor.Error('not-connected', 'user not connected');
+         }
 
         let commentDoc = {
             content: comment.content, 

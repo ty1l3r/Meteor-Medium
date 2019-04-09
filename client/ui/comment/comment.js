@@ -1,12 +1,20 @@
 import './comment.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Comments } from '../../../both';
+import { ENGINE_METHOD_ALL } from 'constants';
 
 //================== CREATE COMMENTAIRES EVENTS =========================
 
 Template.comment_form.events({
     'submit .js-create-comment'(event, instance) {
         event.preventDefault();
+
+    //pas de commentaire si pas connecté.
+        
+    if (!Meteor.userId()) {
+        Modal.show('login_modal');
+        return;
+    }
 
         const content = event.target.content.value;
 

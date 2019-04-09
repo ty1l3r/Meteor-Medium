@@ -11,3 +11,9 @@ Template.registerHelper('getUserPseudo', function (userId) {
     }
 
 });
+
+//cacher les boutons modifidier si un utilisateur n'est pas connecté.
+
+Template.registerHelper('equals', function (a, b) { 
+    return a === b;
+});
