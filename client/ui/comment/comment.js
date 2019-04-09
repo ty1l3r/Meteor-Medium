@@ -28,16 +28,11 @@ Template.comment_form.events({
         Comments.insert(commentDoc);
     */   
         //insertion de la Method
-        Meteor.call('insertComment', {
-            content: content, articleId: FlowRouter.getParam('articleId'),
-            function(err, res) {
-                if (!err) {
-                    event.target.content.value = ''; //vide le champ d'écriture
-                }
-               
-            }   
+        Meteor.call('insertComment', { content: content, articleId: FlowRouter.getParam('articleId')}, function(err, res) {
+            if(!err) {
+                event.target.content.value = '';
+            }
         });
-        
     }
 });
 

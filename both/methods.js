@@ -36,15 +36,13 @@ Meteor.methods({
 
         // emepcher l'édition d'article si le client n'est pas inscrit.
         if (!this.userId) {
-        throw new Meteor.Error('not-connected', 'user not connected');
+            throw new Meteor.Error('not-connected');
         }
         
         //chercher l'article avec l'Id
-        let articleFound = Articles.findOne({ _id: article });
-        // pas de bras, pas de chocolat.
+        let articleFound = Articles.findOne({_id: article.id});
         if (articleFound.ownerId !== this.userId) {
-            throw new Meteor.Error('unauthorized',
-                'L\'utilisateur doit être l\'auteur de l\'article');
+            throw new Meteor.Error('unauthorized', 'L\'utilisateur doit être l\'auteur de l\'article');
         }
 
             Articles.update({ _id: article.id},
