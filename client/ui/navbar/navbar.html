@@ -1,24 +1,68 @@
 <template name="navbar">
-    
-   
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a href="/" class="navbar-brand">Meteor</a>
-            <button class="btn btn-outline-secondary mr-auto js-goto-create-article">
-                    Publier un article
-            </button>
-            {{#unless loggingIn}}
-            {{#if currentUser}}
-            <span class="navbar-text mr-2">
-                {{currentUser.profile.pseudo}}
-            </span>
-            <button class="btn btn-outline-secondary mr-2 js-logout">Déconnexion</button>
-            {{else}}
-            <button class="btn btn-succes js-open-login-modal">Connexion</button>
-            {{/if}}
-            {{/unless}}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Meteor</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
+                aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="btn btn-outline-secondary nav-item mr-auto  js-goto-create-article" href="#">Create<span
+                              class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+            </ul>
+
+            <div class=" row float-left mr-3">
+                {{#unless loggingIn}}
+                {{#if currentUser}}
+                <span class="navbar-text mr-2">
+                    {{currentUser.profile.pseudo}}
+                </span>
+                <button class="btn btn-outline-secondary mr-2 js-logout">Déconnexion</button>
+                {{else}}
+                <button class="btn btn-succes js-open-login-modal">Connexion</button>
+                {{/if}}
+                {{/unless}}
+            </div>
+
         </div>
     </nav>
+
+    <div class="row float-right mr-4">
+        <form class="form-inline mr-2 mt-1 ">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+
+</template>
+
+
+<template name="search">
+    <form id="search">
+        <input type="text" id="searchValue" placeholder="Enter search terms here." />
+        <button>Search</button>
+    </form>
+    <hr />
+
+    <ol>
+        {{#each messages}}
+        <li>{{value}}</li>
+        {{/each}}
+    </ol>
 </template>
 
 <template name="login_modal">
